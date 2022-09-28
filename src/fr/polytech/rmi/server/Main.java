@@ -24,15 +24,15 @@ public class Main {
 
             System.out.println(" ConnectionServer is running... ");
             IConnectionService connectionService = new Connection();
-            Registry reg = LocateRegistry.createRegistry(2001);
+            Registry reg = LocateRegistry.createRegistry(CONSTANTS.DEFAULT_PORT);
             reg.bind(CONSTANTS.CONNEXIONSERV, connectionService);
 
-            
+            /*
             // Bind the remote object's stub in the registry
             final Registry registry = LocateRegistry.createRegistry(CONSTANTS.DEFAULT_PORT);
             final IVODService obj = new VODService();
             registry.bind(CONSTANTS.NAME, obj);
-
+            */
             System.out.println("Server ready");
 
         } catch (RemoteException e) {
