@@ -37,10 +37,21 @@ public class Connection extends UnicastRemoteObject implements IConnectionServic
 
     @Override
     public boolean signIn(String mail, String password) throws SignInFailedException, RemoteException {
+        if (mail == null || password == null) return false;
+
         if (mail.isBlank())
             throw new SignInFailedException("Mail is empty");
-        clientList.add(new User(mail, password));
-        return true;
+
+        if (password.isBlank())
+            throw new SignInFailedException("Pass is empty");
+
+        if (clientList.stream().anyMatch(u -> u.getEmail().equals(mail))) {
+            System.out.println("User was already added to client list");
+            return false;
+        }
+
+        final User newUser = new User(mail, password);
+        return clientList.add(newUser);
     }
 
     @Override
