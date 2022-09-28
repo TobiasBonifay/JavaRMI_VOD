@@ -1,5 +1,6 @@
 package fr.polytech.rmi.server;
 
+import fr.polytech.rmi.client.Client;
 import fr.polytech.rmi.server.exception.InvalidCredentialsException;
 import fr.polytech.rmi.server.exception.SignInFailedException;
 
