@@ -23,8 +23,6 @@ public class Client implements Serializable {
     private void runClient() throws RemoteException, NotBoundException {
         final Registry r = LocateRegistry.getRegistry(IPADDRESS, PORT);
         final IVODService stub = (IVODService) r.lookup(CONSTANTS.NAME);
-
-        IVODService vod = stub.getService();
-        vod.echo();
+        stub.echo();
     }
 }
