@@ -10,9 +10,11 @@ import java.util.List;
 public class Connection implements IConnectionService {
 
     private List<User> clientList;
+    private VODService vodService;
 
     public Connection() {
         this.clientList = new ArrayList<>();
+        this.vodService = new VODService();
     }
 
     @Override
@@ -27,7 +29,11 @@ public class Connection implements IConnectionService {
     public IVODService login(String mail, String password) throws InvalidCredentialsException,RemoteException {
         if (mail.isBlank())
             throw new InvalidCredentialsException("Mail is empty");
-
+        for (User c : clientList){
+            if (c.getEmail().equals(mail) && c.getPassword().equals(password)){
+                return this.vodService;
+            }
+        }
         return new VODService();
     }
 }
