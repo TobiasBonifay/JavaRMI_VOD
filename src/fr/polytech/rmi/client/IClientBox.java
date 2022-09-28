@@ -1,4 +1,4 @@
-package fr.polytech.rmi.server;
+package fr.polytech.rmi.client;
 
 public interface IClientBox {
 }

@@ -1,5 +1,7 @@
 package fr.polytech.rmi.server;
 
+import fr.polytech.rmi.client.IClientBox;
+
 import java.math.BigInteger;
 
 public class Bill {
