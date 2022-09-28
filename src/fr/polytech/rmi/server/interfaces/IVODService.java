@@ -1,4 +1,4 @@
-package fr.polytech.rmi.server;
+package fr.polytech.rmi.server.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

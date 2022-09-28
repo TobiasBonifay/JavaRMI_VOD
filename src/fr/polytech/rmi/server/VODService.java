@@ -1,6 +1,7 @@
 package fr.polytech.rmi.server;
 
 import fr.polytech.rmi.client.IClientBox;
+import fr.polytech.rmi.server.interfaces.IVODService;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;

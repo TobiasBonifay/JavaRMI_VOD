@@ -2,6 +2,8 @@ package fr.polytech.rmi.server;
 
 import fr.polytech.rmi.server.exception.InvalidCredentialsException;
 import fr.polytech.rmi.server.exception.SignInFailedException;
+import fr.polytech.rmi.server.interfaces.IConnectionService;
+import fr.polytech.rmi.server.interfaces.IVODService;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
