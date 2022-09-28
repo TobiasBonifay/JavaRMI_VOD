@@ -2,11 +2,12 @@ package fr.polytech.rmi.server;
 
 import fr.polytech.rmi.client.IClientBox;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class Bill extends UnicastRemoteObject {
+public class Bill extends UnicastRemoteObject implements Serializable {
     private String movieName;
     private BigInteger outrageousPrice;
 
