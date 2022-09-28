@@ -1,7 +1,7 @@
 package fr.polytech.rmi.client;
 
 import fr.polytech.rmi.CONSTANTS;
-import fr.polytech.rmi.server.IVODService;
+import fr.polytech.rmi.server.interfaces.IVODService;
 
 import java.io.Serializable;
 import java.rmi.NotBoundException;

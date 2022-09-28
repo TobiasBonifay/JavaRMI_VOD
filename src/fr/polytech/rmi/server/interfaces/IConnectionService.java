@@ -1,4 +1,4 @@
-package fr.polytech.rmi.server;
+package fr.polytech.rmi.server.interfaces;
 
 import fr.polytech.rmi.server.exception.InvalidCredentialsException;
 import fr.polytech.rmi.server.exception.SignInFailedException;
