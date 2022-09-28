@@ -6,6 +6,8 @@ import fr.polytech.rmi.server.interfaces.IConnectionService;
 import fr.polytech.rmi.server.interfaces.IVODService;
 
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;

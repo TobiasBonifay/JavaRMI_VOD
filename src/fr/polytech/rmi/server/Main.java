@@ -22,9 +22,12 @@ public class Main {
 
         try {
 
-            final IConnectionService connectionService = new Connection();
-            connectionService.run();
+            System.out.println(" ConnectionServer is running... ");
+            IConnectionService connectionService = new Connection();
+            Registry reg = LocateRegistry.createRegistry(2001);
+            reg.bind(CONSTANTS.CONNEXIONSERV, connectionService);
 
+            
             // Bind the remote object's stub in the registry
             final Registry registry = LocateRegistry.createRegistry(CONSTANTS.DEFAULT_PORT);
             final IVODService obj = new VODService();
