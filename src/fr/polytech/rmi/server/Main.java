@@ -15,6 +15,11 @@ public class Main {
 
     public static void main(String[] args) {
         try {
+
+            IConnectionService connectionService = new Connection();
+            connectionService.run();
+
+
             final IVODService obj = new VODService();
             // Bind the remote object's stub in the registry
             final Registry registry = LocateRegistry.createRegistry(CONSTANTS.DEFAULT_PORT);

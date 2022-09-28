@@ -12,4 +12,6 @@ public interface IConnectionService extends Remote {
 
     IVODService login(String mail, String pwd) throws InvalidCredentialsException, RemoteException;
 
+    void run() throws RemoteException;
+
 }

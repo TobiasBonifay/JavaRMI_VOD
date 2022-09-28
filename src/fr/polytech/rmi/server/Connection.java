@@ -4,17 +4,33 @@ import fr.polytech.rmi.server.exception.InvalidCredentialsException;
 import fr.polytech.rmi.server.exception.SignInFailedException;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class Connection implements IConnectionService {
+public class Connection extends UnicastRemoteObject implements IConnectionService {
 
     private List<User> clientList;
     private VODService vodService;
 
-    public Connection() {
+    public Connection() throws RemoteException {
         this.clientList = new ArrayList<>();
         this.vodService = new VODService();
+    }
+
+    @Override
+    public void run() throws RemoteException {
+        Scanner myScanner = new Scanner(System.in);
+        String email = myScanner.nextLine();
+        String pass = myScanner.nextLine();
+        try {
+            if (signIn(email, pass)){
+                System.out.println("User was successfully added to client list !");
+            }
+        } catch (SignInFailedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -22,7 +38,7 @@ public class Connection implements IConnectionService {
         if (mail.isBlank())
             throw new SignInFailedException("Mail is empty");
         clientList.add(new User(mail, password));
-        return false;
+        return true;
     }
 
     @Override
@@ -36,4 +52,5 @@ public class Connection implements IConnectionService {
         }
         return new VODService();
     }
+
 }
