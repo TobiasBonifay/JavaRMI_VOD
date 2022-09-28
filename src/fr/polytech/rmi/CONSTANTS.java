@@ -1,5 +1,8 @@
 package fr.polytech.rmi;
 
-public enum CONSTANTS {
-    NAME
+
+
+public class CONSTANTS {
+    public static final int DEFAULT_PORT = 1099;
+    public static final String NAME = "Hello";
 }
