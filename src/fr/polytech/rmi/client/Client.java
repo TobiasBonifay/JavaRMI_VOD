@@ -13,7 +13,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -75,6 +74,7 @@ public class Client implements Serializable {
                     m.toString();
                 }
 
+                System.out.println("Write isbn (for now), example.mp4: ");
                 String isbn = SCANNER.nextLine();
                 byte[] data = vodService.flow(isbn);
                 LOGGER.info("Data received length : " + data.length);
