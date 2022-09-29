@@ -4,6 +4,8 @@ import fr.polytech.rmi.client.IClientBox;
 import fr.polytech.rmi.server.interfaces.IVODService;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
 
     @Override
     public IVODService getService() throws RemoteException {
-        return null;
+        return this;
     }
 
 
@@ -44,27 +46,31 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
      */
     @Override
     public byte[] flow() throws RemoteException, IOException {
-
         // name should be given to the method
 
         // will be filled in parameter
-        final String path = "empty";
-        final File file = new File(path);
+        final Path path = Paths.get("src/fr/polytech/rmi/server/videos/example.mp4");
+        final File file = new File(path.toUri());
+
+        System.out.println("Looking for file " + file.getAbsolutePath());
 
         final int bufferSize = file.length() > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) file.length();
         byte[] bytes = new byte[bufferSize];
 
+        System.out.println("Generating stream...");
         InputStream is = null;
         try {
             is = new FileInputStream(file);
             is.read(bytes, 0, bufferSize);
+            return bytes;         // return the name with Pair if you can't find any other way of doing it
         } catch (FileNotFoundException e) {
+            System.err.println("File not found...");
             e.printStackTrace();
         } finally {
             is.close();
+            System.out.println("Done.");
         }
 
-        // return the name with Pair if can't find any other way of doing it
-        return bytes;
+        return null;
     }
 }

@@ -28,8 +28,6 @@ public class Client implements Serializable {
     private void runClient() throws RemoteException, NotBoundException {
 
         try {
-
-
             final Registry reg = LocateRegistry.getRegistry(IPADDRESS, PORT);
             final IConnectionService stubConnexion = (IConnectionService) reg.lookup("ConnexionServ");
             System.out.println("Establishing connection...");
@@ -44,13 +42,15 @@ public class Client implements Serializable {
             }
 
             IVODService vodService = stubConnexion.login(email, pass);
-            if (vodService.getService() != null) {
+            if (vodService != null) {
                 try {
                     byte[] data = vodService.flow();
                     System.out.println("Data received length : " + data.length);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else {
+                System.err.println("null..?");
             }
 
         } catch (RemoteException | NotBoundException | SignInFailedException | InvalidCredentialsException e) {
