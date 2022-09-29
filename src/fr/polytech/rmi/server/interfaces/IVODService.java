@@ -1,8 +1,11 @@
 package fr.polytech.rmi.server.interfaces;
 
+import fr.polytech.rmi.server.MovieDesc;
+
 import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 public interface IVODService extends Remote {
 
@@ -10,7 +13,7 @@ public interface IVODService extends Remote {
         System.out.println("I'm VOD service, it works!");
     }
 
-    IVODService getService() throws RemoteException;
+    List<MovieDesc> viewCatalog() throws RemoteException;
 
     byte[] flow() throws RemoteException, IOException;
 }

@@ -9,19 +9,27 @@ import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class VODService extends UnicastRemoteObject implements IVODService, Serializable {
 
+    private final List<MovieDesc> movieDescList;
+
     private static final Logger LOGGER = Logger.getLogger(VODService.class.getName());
 
     protected VODService() throws RemoteException {
         super();
-    }
+        movieDescList = new ArrayList<>();
 
-    private List<MovieDesc> viewCatalog() throws RemoteException {
-        return new ArrayList<>();
+        //hardcoded movies for test
+        movieDescList.add(new MovieDesc("9485734573847", "Harry Potter", "" +
+                "Harry Potter is a film series based on the eponymous novels by J. K. Rowling. The series is produced and distributed by Warner Bros. Pictures and consists of eight fantasy films, beginning with Harry Potter and the Philosopher's Stone (2001) and culminating with Harry Potter and the Deathly Hallows – Part 2 (2011).[2][3] A spin-off prequel series, planned to consist of five films, started with Fantastic Beasts and Where to Find Them (2016), marking the beginning of the Wizarding World shared media franchise."));
+    }
+    @Override
+    public List<MovieDesc> viewCatalog() throws RemoteException {
+        return new ArrayList<>(this.movieDescList);
     }
 
     Bill playMovie(String isbn, IClientBox box) throws RemoteException {
@@ -33,10 +41,6 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
         IVODService.super.echo();
     }
 
-    @Override
-    public IVODService getService() throws RemoteException {
-        return this;
-    }
 
 
     /**

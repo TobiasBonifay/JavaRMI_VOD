@@ -1,6 +1,7 @@
 package fr.polytech.rmi.client;
 
 
+import fr.polytech.rmi.server.MovieDesc;
 import fr.polytech.rmi.server.exception.InvalidCredentialsException;
 import fr.polytech.rmi.server.exception.SignInFailedException;
 import fr.polytech.rmi.server.interfaces.IConnectionService;
@@ -13,6 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -50,7 +52,6 @@ public class Client implements Serializable {
         String choice = SCANNER.nextLine();
 
         while( ! choice.equals("y") && ! choice.equals("n")){
-            choice = null;
             System.out.println("Do you have an account ? (y/n)");
             choice = SCANNER.nextLine();
         }
@@ -76,14 +77,18 @@ public class Client implements Serializable {
 
 
 
-
-
         try {
             final IVODService vodService = stubConnexion.login(email, password);
             try {
+                // Client initialement connait donc la classe MovieDesc
+                List<MovieDesc> movieDescList = vodService.viewCatalog();
+                for (MovieDesc m : movieDescList){
+                    m.toString();
+                }
+
                 byte[] data = vodService.flow();
                 LOGGER.info("Data received length : " + data.length);
-                System.out.println(Arrays.toString(data));
+
             } catch (IOException e) {
                 LOGGER.severe("vodService can't read the requested content.\n" + e);
             }
