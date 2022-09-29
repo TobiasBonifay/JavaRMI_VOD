@@ -28,7 +28,7 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
     }
     @Override
     public List<MovieDesc> viewCatalog() throws RemoteException {
-        return new ArrayList<>(this.movieDescList);
+        return this.movieDescList;
     }
 
     Bill playMovie(String isbn, IClientBox box) throws RemoteException {
