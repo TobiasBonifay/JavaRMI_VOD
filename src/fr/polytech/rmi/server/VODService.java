@@ -3,7 +3,7 @@ package fr.polytech.rmi.server;
 import fr.polytech.rmi.client.IClientBox;
 import fr.polytech.rmi.server.interfaces.IVODService;
 
-import java.io.Serializable;
+import java.io.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -31,5 +31,40 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
     @Override
     public IVODService getService() throws RemoteException {
         return null;
+    }
+
+
+    /**
+     * I know IOException include FileNotFoundException... but let it for now
+     *
+     * @return byte array of a file
+     * @throws RemoteException
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    @Override
+    public byte[] flow() throws RemoteException, IOException {
+
+        // name should be given to the method
+
+        // will be filled in parameter
+        final String path = "empty";
+        final File file = new File(path);
+
+        final int bufferSize = file.length() > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) file.length();
+        byte[] bytes = new byte[bufferSize];
+
+        InputStream is = null;
+        try {
+            is = new FileInputStream(file);
+            is.read(bytes, 0, bufferSize);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            is.close();
+        }
+
+        // return the name with Pair if can't find any other way of doing it
+        return bytes;
     }
 }
