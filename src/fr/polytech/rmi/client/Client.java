@@ -32,7 +32,7 @@ public class Client implements Serializable {
 
             final Registry reg = LocateRegistry.getRegistry(IPADDRESS, PORT);
             final IConnectionService stubConnexion = (IConnectionService) reg.lookup("ConnexionServ");
-            System.out.println("Connexion établie...");
+            System.out.println("Establishing connection...");
 
             Scanner myScanner = new Scanner(System.in);
             System.out.print("Email : ");
@@ -40,7 +40,7 @@ public class Client implements Serializable {
             System.out.print("Password : ");
             String pass = myScanner.nextLine();
             if (stubConnexion.signIn(email, pass)) {
-                System.out.println("Compte a été créé");
+                System.out.println("The account is now signed in");
             }
 
             IVODService vodService = stubConnexion.login(email, pass);
