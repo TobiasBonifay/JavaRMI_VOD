@@ -1,9 +1,12 @@
 package fr.polytech.rmi.client;
 
 
+import fr.polytech.rmi.server.exception.InvalidCredentialsException;
 import fr.polytech.rmi.server.exception.SignInFailedException;
 import fr.polytech.rmi.server.interfaces.IConnectionService;
+import fr.polytech.rmi.server.interfaces.IVODService;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -36,11 +39,21 @@ public class Client implements Serializable {
             String email = myScanner.nextLine();
             System.out.print("Password : ");
             String pass = myScanner.nextLine();
-            if (stubConnexion.signIn(email, pass)){
+            if (stubConnexion.signIn(email, pass)) {
                 System.out.println("Compte a été créé");
             }
 
-        } catch (RemoteException | NotBoundException | SignInFailedException e){
+            IVODService vodService = stubConnexion.login(email, pass);
+            if (vodService.getService() != null) {
+                try {
+                    byte[] data = vodService.flow();
+                    System.out.println("Data received length : " + data.length);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (RemoteException | NotBoundException | SignInFailedException | InvalidCredentialsException e) {
             e.printStackTrace();
         }
         /*
