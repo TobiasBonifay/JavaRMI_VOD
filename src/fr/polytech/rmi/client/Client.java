@@ -21,7 +21,7 @@ public class Client implements Serializable {
 
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
-    private static final String IPADDRESS = "127.0.0.1";
+    private static final String IP_ADDRESS = "127.0.0.1";
     private static final int PORT = 1099;
     private String email;
     private String password;
@@ -42,7 +42,7 @@ public class Client implements Serializable {
 
     private void runClient() throws RemoteException, NotBoundException {
 
-        final Registry reg = LocateRegistry.getRegistry(IPADDRESS, PORT);
+        final Registry reg = LocateRegistry.getRegistry(IP_ADDRESS, PORT);
         final IConnectionService stubConnexion = (IConnectionService) reg.lookup("ConnexionServ");
         LOGGER.info("Establishing connection...");
 
@@ -85,12 +85,10 @@ public class Client implements Serializable {
                 LOGGER.info("Data received length : " + data.length);
                 System.out.println(Arrays.toString(data));
             } catch (IOException e) {
-                LOGGER.severe("vodService can't read the requested content.");
-                e.printStackTrace();
+                LOGGER.severe("vodService can't read the requested content.\n" + e);
             }
         } catch (InvalidCredentialsException e) {
-            LOGGER.severe("Invalid credentials.");
-            throw new RuntimeException(e);
+            throw new RuntimeException("Invalid credentials\n" + e);
         }
     }
 }

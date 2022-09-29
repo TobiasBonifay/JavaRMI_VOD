@@ -10,8 +10,11 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class VODService extends UnicastRemoteObject implements IVODService, Serializable {
+
+    private static final Logger LOGGER = Logger.getLogger(VODService.class.getName());
 
     protected VODService() throws RemoteException {
         super();
@@ -52,25 +55,23 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
         final Path path = Paths.get("src/fr/polytech/rmi/server/videos/example.mp4");
         final File file = new File(path.toUri());
 
-        System.out.println("Looking for file " + file.getAbsolutePath());
+        LOGGER.info("Looking for file " + file.getAbsolutePath());
 
         final int bufferSize = file.length() > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) file.length();
         byte[] bytes = new byte[bufferSize];
 
-        System.out.println("Generating stream...");
+        LOGGER.info("Generating stream...");
         InputStream is = null;
         try {
             is = new FileInputStream(file);
             is.read(bytes, 0, bufferSize);
             return bytes;         // return the name with Pair if you can't find any other way of doing it
         } catch (FileNotFoundException e) {
-            System.err.println("File not found...");
-            e.printStackTrace();
+            LOGGER.severe("File " + file.getAbsolutePath() + " not found\n" + e);
         } finally {
             is.close();
-            System.out.println("Done.");
+            LOGGER.info("Done reading " + file.getAbsolutePath());
         }
-
-        return null;
+        return new byte[0];
     }
 }
