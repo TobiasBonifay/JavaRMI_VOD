@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -52,11 +51,11 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
      * @throws IOException
      */
     @Override
-    public byte[] flow() throws RemoteException, IOException {
+    public byte[] flow(String isbn) throws RemoteException, IOException {
         // name should be given to the method
 
         // will be filled in parameter
-        final Path path = Paths.get("src/fr/polytech/rmi/server/videos/example.mp4");
+        final Path path = Paths.get("src/fr/polytech/rmi/server/videos/" + isbn);
         final File file = new File(path.toUri());
 
         LOGGER.info("Looking for file " + file.getAbsolutePath());

@@ -75,7 +75,8 @@ public class Client implements Serializable {
                     m.toString();
                 }
 
-                byte[] data = vodService.flow();
+                String isbn = SCANNER.nextLine();
+                byte[] data = vodService.flow(isbn);
                 LOGGER.info("Data received length : " + data.length);
 
                 // System.out.println(Arrays.toString(data));

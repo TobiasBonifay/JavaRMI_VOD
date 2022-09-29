@@ -15,5 +15,5 @@ public interface IVODService extends Remote {
 
     List<MovieDesc> viewCatalog() throws RemoteException;
 
-    byte[] flow() throws RemoteException, IOException;
+    byte[] flow(String isbn) throws RemoteException, IOException;
 }
