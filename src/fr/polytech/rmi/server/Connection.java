@@ -26,6 +26,11 @@ public class Connection extends UnicastRemoteObject implements IConnectionServic
     }
 
     @Override
+    public Set<User> getClients() {
+        return this.clients;
+    }
+
+    @Override
     public void run() throws RemoteException {
         final String email = SCANNER.nextLine();
         final String pass = SCANNER.nextLine();
