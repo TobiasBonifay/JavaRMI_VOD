@@ -18,7 +18,7 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 
-public class Client implements Serializable {
+public class Client implements Serializable, IClientBox {
 
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
@@ -46,7 +46,36 @@ public class Client implements Serializable {
         final IConnectionService stubConnexion = (IConnectionService) reg.lookup("ConnexionServ");
         LOGGER.info("Establishing connection...");
 
+        signIn(stubConnexion);
 
+        final IVODService vodService;
+        try {
+            vodService = stubConnexion.login(email, password);
+        } catch (InvalidCredentialsException e) {
+            throw new RuntimeException("Invalid credentials\n" + e);
+        }
+        try {
+            // Client initialement connait donc la classe MovieDesc
+            List<MovieDesc> movieDescList = vodService.viewCatalog();
+            for (MovieDesc m : movieDescList) {
+                System.out.println(m);
+            }
+
+            System.out.println("Write isbn (for now), example.mp4: ");
+            String isbn = SCANNER.nextLine();
+            byte[] data = vodService.flow(isbn);
+            LOGGER.info("Data received length : " + data.length);
+
+            // System.out.println(Arrays.toString(data));
+            System.out.println(data.length > 300 ? "Works" : "Problem here");
+        } catch (IOException e) {
+            LOGGER.severe("vodService can't read the requested content.\n" + e);
+        }
+
+
+    }
+
+    private void signIn(IConnectionService stubConnexion) throws RemoteException {
         String choice;
         do {
             System.out.println("Do you have an account ? (y/n)");
@@ -63,29 +92,6 @@ public class Client implements Serializable {
                 LOGGER.severe("Failed to sign in");
                 throw new RuntimeException(e);
             }
-        }
-
-        try {
-            final IVODService vodService = stubConnexion.login(email, password);
-            try {
-                // Client initialement connait donc la classe MovieDesc
-                List<MovieDesc> movieDescList = vodService.viewCatalog();
-                for (MovieDesc m : movieDescList){
-                    m.toString();
-                }
-
-                System.out.println("Write isbn (for now), example.mp4: ");
-                String isbn = SCANNER.nextLine();
-                byte[] data = vodService.flow(isbn);
-                LOGGER.info("Data received length : " + data.length);
-
-                // System.out.println(Arrays.toString(data));
-                System.out.println(data.length > 300 ? "Works" : "Problem here");
-            } catch (IOException e) {
-                LOGGER.severe("vodService can't read the requested content.\n" + e);
-            }
-        } catch (InvalidCredentialsException e) {
-            throw new RuntimeException("Invalid credentials\n" + e);
         }
     }
 }
