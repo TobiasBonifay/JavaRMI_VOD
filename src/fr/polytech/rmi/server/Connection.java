@@ -7,62 +7,50 @@ import fr.polytech.rmi.server.interfaces.IVODService;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.logging.Logger;
 
 public class Connection extends UnicastRemoteObject implements IConnectionService {
 
-    private List<User> clientList;
+    private static final java.util.logging.Logger LOGGER = Logger.getLogger(Connection.class.getName());
+    private static final Scanner SCANNER = new Scanner(System.in);
     private static VODService vodService;
+    private final transient Set<User> clients;
 
     public Connection() throws RemoteException {
-        this.clientList = new ArrayList<>();
-        this.vodService = new VODService();
+        vodService = new VODService();
+        this.clients = new HashSet<>();
     }
 
     @Override
     public void run() throws RemoteException {
-        Scanner myScanner = new Scanner(System.in);
-        String email = myScanner.nextLine();
-        String pass = myScanner.nextLine();
+        final String email = SCANNER.nextLine();
+        final String pass = SCANNER.nextLine();
         try {
-            if (signIn(email, pass)){
-                System.out.println("User was successfully added to client list !");
-            }
+            if (signIn(email, pass)) System.out.println("User was successfully added to client list !");
         } catch (SignInFailedException e) {
-            e.printStackTrace();
+            LOGGER.severe("User was not added to client list... already logged in? " + e);
         }
     }
 
     @Override
     public boolean signIn(String mail, String password) throws SignInFailedException, RemoteException {
-        if (mail == null || password == null) return false;
+        if (mail == null || mail.isBlank()) throw new SignInFailedException("Mail is empty");
+        if (password == null || password.isBlank()) throw new SignInFailedException("Password is empty");
 
-        if (mail.isBlank())
-            throw new SignInFailedException("Mail is empty");
-
-        if (password.isBlank())
-            throw new SignInFailedException("Pass is empty");
-
-        if (clientList.stream().anyMatch(u -> u.getEmail().equals(mail))) {
-            System.out.println("User was already added to client list");
-            return false;
-        }
+        if (clients.stream().anyMatch(u -> u.getEmail().equals(mail)))
+            throw new SignInFailedException("User was already added to client list");
 
         final User newUser = new User(mail, password);
-        return clientList.add(newUser);
+        return clients.add(newUser);
     }
 
     @Override
-    public IVODService login(String mail, String password) throws InvalidCredentialsException,RemoteException {
-        if (mail.isBlank())
-            throw new InvalidCredentialsException("Mail is empty");
-        for (User c : clientList){
-            if (c.getEmail().equals(mail) && c.getPassword().equals(password)){
-                return vodService;
-            }
-        }
-        return null;
+    public IVODService login(String mail, String password) throws InvalidCredentialsException, RemoteException {
+        if (mail == null || mail.isBlank()) throw new InvalidCredentialsException("Mail is empty");
+        if (password == null || password.isBlank()) throw new InvalidCredentialsException("Password is empty");
+        return clients.stream().anyMatch(u -> u.getEmail().equals(mail) && u.getPassword().equals(password)) ? vodService : null;
     }
 }

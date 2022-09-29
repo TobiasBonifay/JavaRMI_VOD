@@ -7,6 +7,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.logging.Logger;
 
 /**
  * Server launcher
@@ -16,21 +17,22 @@ import java.rmi.registry.Registry;
  */
 public class Main {
 
+    private static final java.util.logging.Logger LOGGER = Logger.getLogger(Main.class.getName());
+
     public static void main(String[] args) {
 
-        System.out.println("Server is starting...");
+        LOGGER.info("Server is starting...");
 
         try {
-            System.out.println(" ConnectionServer is running... ");
             final IConnectionService connectionService = new Connection();
+            LOGGER.info(" ConnectionServer is running... ");
             final Registry reg = LocateRegistry.createRegistry(CONSTANTS.DEFAULT_PORT);
             reg.bind(CONSTANTS.CONNEXIONSERV, connectionService);
-            System.out.println("Server ready");
+            LOGGER.info("Server ready");
         } catch (RemoteException e) {
-            System.err.println("Server exception: " + e);
+            LOGGER.severe("Server exception: " + e);
         } catch (AlreadyBoundException e) {
-            System.err.println("Unexpected server error");
-            e.printStackTrace();
+            LOGGER.severe("Connection already bound: " + e);
         }
     }
 }
