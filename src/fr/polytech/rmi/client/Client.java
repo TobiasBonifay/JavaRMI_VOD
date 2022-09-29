@@ -27,38 +27,33 @@ public class Client implements Serializable {
 
     private void runClient() throws RemoteException, NotBoundException {
 
+        final Registry reg = LocateRegistry.getRegistry(IPADDRESS, PORT);
+        final IConnectionService stubConnexion = (IConnectionService) reg.lookup("ConnexionServ");
+        System.out.println("Establishing connection...");
+
+        final Scanner myScanner = new Scanner(System.in);
+        System.out.print("Email : ");
+        final String email = myScanner.nextLine();
+        System.out.print("Password : ");
+        final String pass = myScanner.nextLine();
+
         try {
-            final Registry reg = LocateRegistry.getRegistry(IPADDRESS, PORT);
-            final IConnectionService stubConnexion = (IConnectionService) reg.lookup("ConnexionServ");
-            System.out.println("Establishing connection...");
-
-            Scanner myScanner = new Scanner(System.in);
-            System.out.print("Email : ");
-            String email = myScanner.nextLine();
-            System.out.print("Password : ");
-            String pass = myScanner.nextLine();
-            if (stubConnexion.signIn(email, pass)) {
-                System.out.println("The account is now signed in");
-            }
-
-            IVODService vodService = stubConnexion.login(email, pass);
-            if (vodService != null) {
-                try {
-                    byte[] data = vodService.flow();
-                    System.out.println("Data received length : " + data.length);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.err.println("null..?");
-            }
-
-        } catch (RemoteException | NotBoundException | SignInFailedException | InvalidCredentialsException e) {
-            e.printStackTrace();
+            stubConnexion.signIn(email, pass);
+            System.out.println("The account is now signed in");
+        } catch (SignInFailedException e) {
+            throw new RuntimeException(e);
         }
-        /*
-        final Registry r = LocateRegistry.getRegistry(IPADDRESS, PORT);
-        final IVODService stub = (IVODService) r.lookup(CONSTANTS.NAME);
-        stub.echo()*/
+
+        try {
+            final IVODService vodService = stubConnexion.login(email, pass);
+            try {
+                byte[] data = vodService.flow();
+                System.out.println("Data received length : " + data.length);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (InvalidCredentialsException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

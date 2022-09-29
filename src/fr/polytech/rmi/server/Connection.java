@@ -6,8 +6,6 @@ import fr.polytech.rmi.server.interfaces.IConnectionService;
 import fr.polytech.rmi.server.interfaces.IVODService;
 
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,7 @@ import java.util.Scanner;
 public class Connection extends UnicastRemoteObject implements IConnectionService {
 
     private List<User> clientList;
-    private VODService vodService;
+    private static VODService vodService;
 
     public Connection() throws RemoteException {
         this.clientList = new ArrayList<>();
@@ -62,10 +60,9 @@ public class Connection extends UnicastRemoteObject implements IConnectionServic
             throw new InvalidCredentialsException("Mail is empty");
         for (User c : clientList){
             if (c.getEmail().equals(mail) && c.getPassword().equals(password)){
-                return this.vodService;
+                return vodService;
             }
         }
-        return new VODService();
+        return null;
     }
-
 }
