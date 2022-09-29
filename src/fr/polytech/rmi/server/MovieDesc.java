@@ -14,8 +14,21 @@ public class MovieDesc extends UnicastRemoteObject implements Serializable {
         this.movieName = movieName;
         this.synopsis = synopsis;
     }
+
+    public String getIsbn() {
+        return this.isbn;
+    }
+
+    public String getMovieName() {
+        return this.movieName;
+    }
+
+    public String getSynopsis() {
+        return this.synopsis;
+    }
+
     @Override
     public String toString() {
-        return isbn  + " ----- " + synopsis ;
+        return isbn + " ----- " + synopsis;
     }
 }
