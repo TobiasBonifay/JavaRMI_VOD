@@ -53,6 +53,9 @@ public class Connection extends UnicastRemoteObject implements IConnectionServic
         if (mail == null || mail.isBlank()) throw new InvalidCredentialsException("Mail is empty");
         if (password == null || password.isBlank()) throw new InvalidCredentialsException("Password is empty");
         final Predicate<User> sameMailAndPassword = u -> u.getEmail().equals(mail) && u.getPassword().equals(password);
-        return clients.stream().anyMatch(sameMailAndPassword) ? vodService : null;
+        if (clients.stream().anyMatch(sameMailAndPassword))
+            return vodService;
+
+        throw new InvalidCredentialsException("User does not exists.");
     }
 }
