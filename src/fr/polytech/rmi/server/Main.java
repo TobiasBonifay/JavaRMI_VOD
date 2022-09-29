@@ -3,9 +3,9 @@ package fr.polytech.rmi.server;
 import fr.polytech.rmi.CONSTANTS;
 import fr.polytech.rmi.server.interfaces.IConnectionService;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -21,11 +21,32 @@ import java.util.logging.Logger;
  */
 public class Main {
 
+    private static final Path path = Paths.get(CONSTANTS.FILE_DB);
+
     private static final java.util.logging.Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
 
         LOGGER.info("Server is starting...");
+
+        LOGGER.info("Looking for configuration file... " + CONSTANTS.FILE_DB);
+        InputStream inputStream = null;
+        try {
+            File file = new File(path.toUri());
+            inputStream = new FileInputStream(file);
+            if (file.exists() && !file.isDirectory() && file.canRead()) LOGGER.info("File exists");
+            // TO DO with inputStream
+        } catch (FileNotFoundException e) {
+            LOGGER.info("No old save DB detected");
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         Registry reg = null;
         try {
@@ -48,16 +69,9 @@ public class Main {
     private static void save(final Registry finalReg) {
         try {
             LOGGER.info("Saving before shutdown...");
-            final FileWriter fw = new FileWriter("save.db");
-            final BufferedWriter writer = new BufferedWriter(fw);
+            final BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()));
             final IConnectionService ic = (IConnectionService) finalReg.lookup(CONSTANTS.CONNEXIONSERV);
-            ic.getClients().stream().forEach(client -> {
-                try {
-                    writer.write(client.getEmail() + " " + client.getPassword());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            for (User client : ic.getClients()) writer.write(client.getEmail() + " " + client.getPassword());
             writer.close();
         } catch (IOException | NotBoundException e) {
             e.printStackTrace();
