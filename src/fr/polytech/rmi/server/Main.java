@@ -32,31 +32,29 @@ public class Main {
 
         LOGGER.info("Server is starting...");
 
-        LOGGER.info("Looking for configuration file... " + CONSTANTS.FILE_DB);
+        LOGGER.info("Looking for old database file... " + CONSTANTS.FILE_DB);
+        final Set<User> userToRecreate = new HashSet<>();
         try {
             final File file = new File(path.toUri());
-            final Set<User> userToRecreate = new HashSet<>();
             if (file.exists() && !file.isDirectory() && file.canRead()) {
                 LOGGER.info("File exists");
                 final Scanner scanner = new Scanner(file);
                 LOGGER.info("Users found:");
-                // each string represents an user (email password)
+                // each string represents a user (email password)
                 while (scanner.hasNextLine()) {
                     final String[] data = scanner.nextLine().split(" ");
                     final User userFound = new User(data[0], data[1]);
                     userToRecreate.add(userFound);
+                    LOGGER.info("User: " + userFound.getEmail() + "  " + userFound.getPassword());
                 }
             }
-            // USER LIST TO GIVE !! TO CONTINUE
-            System.out.println(userToRecreate.toArray().toString());
-
         } catch (FileNotFoundException e) {
             LOGGER.info("No old save DB detected");
         }
 
         Registry reg = null;
         try {
-            final IConnectionService connectionService = new Connection();
+            final IConnectionService connectionService = new Connection(userToRecreate);
             LOGGER.info(" ConnectionServer is running... ");
             reg = LocateRegistry.createRegistry(CONSTANTS.DEFAULT_PORT);
             reg.bind(CONSTANTS.CONNEXIONSERV, connectionService);

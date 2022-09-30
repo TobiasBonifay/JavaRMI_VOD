@@ -7,7 +7,6 @@ import fr.polytech.rmi.server.interfaces.IVODService;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -20,9 +19,9 @@ public class Connection extends UnicastRemoteObject implements IConnectionServic
     private static VODService vodService;
     private final transient Set<User> clients;
 
-    public Connection() throws RemoteException {
+    public Connection(final Set<User> clients) throws RemoteException {
         vodService = new VODService();
-        this.clients = new HashSet<>();
+        this.clients = clients;
     }
 
     @Override

@@ -17,5 +17,4 @@ public interface IConnectionService extends Remote {
     void run() throws RemoteException;
 
     Set<User> getClients() throws RemoteException;
-
 }
