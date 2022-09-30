@@ -14,13 +14,14 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 
-public class Client implements Serializable, IClientBox {
+public class Client extends UnicastRemoteObject implements Serializable, IClientBox {
 
     private static final Scanner SCANNER = new Scanner(System.in);
     private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
@@ -28,6 +29,9 @@ public class Client implements Serializable, IClientBox {
     private static final int PORT = 1099;
     private String email;
     private String password;
+
+    protected Client() throws RemoteException {
+    }
 
     public static void main(String[] args) throws NotBoundException, RemoteException {
         Client c1 = new Client();
@@ -101,7 +105,8 @@ public class Client implements Serializable, IClientBox {
 
     //Used by server side
     @Override
-    public void stream(byte[] chunk) {
+    public void stream(byte[] chunk) throws RemoteException {
+        System.out.println("Lecture de la vidéo : ");
         System.out.println(Arrays.toString(chunk));
     }
 }
