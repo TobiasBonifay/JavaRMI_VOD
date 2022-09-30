@@ -70,12 +70,8 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
             System.out.println("Write isbn (for now), example.mp4: ");
             String isbn = SCANNER.nextLine();
             Bill bill = vodService.playMovie(isbn, this);
-            /*
-            byte[] data = vodService.flow(isbn);
-            LOGGER.info("Data received length : " + data.length);
+            System.out.println(bill);
 
-            // System.out.println(Arrays.toString(data));
-            System.out.println(data.length > 300 ? "Works" : "Problem here");*/
         } catch (IOException e) {
             LOGGER.severe("vodService can't read the requested content.\n" + e);
         }

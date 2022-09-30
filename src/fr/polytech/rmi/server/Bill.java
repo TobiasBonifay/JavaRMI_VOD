@@ -1,17 +1,17 @@
 package fr.polytech.rmi.server;
 
-import fr.polytech.rmi.client.IClientBox;
-
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
 
 public class Bill implements Serializable {
-    private String movieName;
-    private BigInteger outrageousPrice;
+    private final String movieName;
+    private final BigInteger outrageousPrice;
 
-    public Bill(String isbn, IClientBox box) throws RemoteException {
 
+    public Bill(String movieName, BigInteger outrageousPrice) {
+        this.movieName = movieName;
+        this.outrageousPrice = outrageousPrice;
     }
 
     public String getMovieName() throws RemoteException {
@@ -20,5 +20,12 @@ public class Bill implements Serializable {
 
     public BigInteger getOutrageousPrice() throws RemoteException {
         return outrageousPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Bill : " +
+                "movie : " + movieName +
+                ", Price : " + outrageousPrice + "$" ;
     }
 }

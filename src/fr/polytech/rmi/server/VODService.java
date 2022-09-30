@@ -4,6 +4,7 @@ import fr.polytech.rmi.client.IClientBox;
 import fr.polytech.rmi.server.interfaces.IVODService;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
@@ -36,7 +37,7 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new Bill(isbn, box);
+        return new Bill("Harry Potter", new BigInteger("123456789123"));
     }
 
     @Override
