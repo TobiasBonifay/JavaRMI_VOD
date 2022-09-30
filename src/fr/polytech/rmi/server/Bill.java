@@ -2,7 +2,6 @@ package fr.polytech.rmi.server;
 
 import java.io.Serializable;
 import java.math.BigInteger;
-import java.rmi.RemoteException;
 
 public class Bill implements Serializable {
     private final String movieName;
@@ -14,11 +13,11 @@ public class Bill implements Serializable {
         this.outrageousPrice = outrageousPrice;
     }
 
-    public String getMovieName() throws RemoteException {
+    public String getMovieName() {
         return movieName;
     }
 
-    public BigInteger getOutrageousPrice() throws RemoteException {
+    public BigInteger getOutrageousPrice() {
         return outrageousPrice;
     }
 

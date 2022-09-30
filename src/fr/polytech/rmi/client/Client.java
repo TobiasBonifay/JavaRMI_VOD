@@ -67,7 +67,7 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
                 System.out.println(m);
             }
 
-            System.out.println("Write isbn (for now), example.mp4: ");
+            System.out.println("Write isbn : ");
             String isbn = SCANNER.nextLine();
             Bill bill = vodService.playMovie(isbn, this);
             System.out.println(bill);
