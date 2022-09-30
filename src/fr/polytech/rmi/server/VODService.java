@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class VODService extends UnicastRemoteObject implements IVODService, Serializable {
@@ -21,11 +22,9 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
     protected VODService() throws RemoteException {
         super();
         movieDescList = new ArrayList<>();
+        readMoviesData();
+        }
 
-        //hardcoded movies for test
-        movieDescList.add(new MovieDesc("9485734573847", "Harry Potter", "" +
-                "Harry Potter is a film series based on the eponymous novels by J. K. Rowling. The series is produced and distributed by Warner Bros. Pictures and consists of eight fantasy films, beginning with Harry Potter and the Philosopher's Stone (2001) and culminating with Harry Potter and the Deathly Hallows – Part 2 (2011).[2][3] A spin-off prequel series, planned to consist of five films, started with Fantastic Beasts and Where to Find Them (2016), marking the beginning of the Wizarding World shared media franchise."));
-    }
     @Override
     public List<MovieDesc> viewCatalog() throws RemoteException {
         return this.movieDescList;
@@ -76,5 +75,30 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
             LOGGER.info("Done reading " + file.getAbsolutePath());
         }
         return new byte[0];
+    }
+
+    void readMoviesData(){
+        try
+        {
+            // Le fichier d'entrée
+            FileInputStream file = new FileInputStream("movies.txt");
+            Scanner scanner = new Scanner(file);
+            String isbn;
+            String movieName;
+            String synopsys;
+
+            while(scanner.hasNextLine())
+            {
+                isbn = scanner.nextLine();
+                movieName = scanner.nextLine();
+                synopsys = scanner.nextLine();
+                movieDescList.add(new MovieDesc (isbn,movieName,synopsys));
+            }
+            scanner.close();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
