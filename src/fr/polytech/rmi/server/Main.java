@@ -11,6 +11,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -30,22 +33,25 @@ public class Main {
         LOGGER.info("Server is starting...");
 
         LOGGER.info("Looking for configuration file... " + CONSTANTS.FILE_DB);
-        InputStream inputStream = null;
         try {
-            File file = new File(path.toUri());
-            inputStream = new FileInputStream(file);
-            if (file.exists() && !file.isDirectory() && file.canRead()) LOGGER.info("File exists");
-            // TO DO with inputStream
-        } catch (FileNotFoundException e) {
-            LOGGER.info("No old save DB detected");
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            final File file = new File(path.toUri());
+            final Set<User> userToRecreate = new HashSet<>();
+            if (file.exists() && !file.isDirectory() && file.canRead()) {
+                LOGGER.info("File exists");
+                final Scanner scanner = new Scanner(file);
+                LOGGER.info("Users found:");
+                // each string represents an user (email password)
+                while (scanner.hasNextLine()) {
+                    final String[] data = scanner.nextLine().split(" ");
+                    final User userFound = new User(data[0], data[1]);
+                    userToRecreate.add(userFound);
                 }
             }
+            // USER LIST TO GIVE !! TO CONTINUE
+            System.out.println(userToRecreate.toArray().toString());
+
+        } catch (FileNotFoundException e) {
+            LOGGER.info("No old save DB detected");
         }
 
         Registry reg = null;
@@ -71,7 +77,8 @@ public class Main {
             LOGGER.info("Saving before shutdown...");
             final BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()));
             final IConnectionService ic = (IConnectionService) finalReg.lookup(CONSTANTS.CONNEXIONSERV);
-            for (User client : ic.getClients()) writer.write(client.getEmail() + " " + client.getPassword());
+            for (User client : ic.getClients())
+                writer.write(client.getEmail() + " " + client.getPassword() + System.lineSeparator());
             writer.close();
         } catch (IOException | NotBoundException e) {
             e.printStackTrace();
