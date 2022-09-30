@@ -1,6 +1,7 @@
 package fr.polytech.rmi.client;
 
 
+import fr.polytech.rmi.server.Bill;
 import fr.polytech.rmi.server.MovieDesc;
 import fr.polytech.rmi.server.exception.InvalidCredentialsException;
 import fr.polytech.rmi.server.exception.SignInFailedException;
@@ -13,6 +14,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -63,11 +65,13 @@ public class Client implements Serializable, IClientBox {
 
             System.out.println("Write isbn (for now), example.mp4: ");
             String isbn = SCANNER.nextLine();
+            Bill bill = vodService.playMovie(isbn, this);
+            /*
             byte[] data = vodService.flow(isbn);
             LOGGER.info("Data received length : " + data.length);
 
             // System.out.println(Arrays.toString(data));
-            System.out.println(data.length > 300 ? "Works" : "Problem here");
+            System.out.println(data.length > 300 ? "Works" : "Problem here");*/
         } catch (IOException e) {
             LOGGER.severe("vodService can't read the requested content.\n" + e);
         }
@@ -93,5 +97,11 @@ public class Client implements Serializable, IClientBox {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    //Used by server side
+    @Override
+    public void stream(byte[] chunk) {
+        System.out.println(Arrays.toString(chunk));
     }
 }

@@ -30,7 +30,12 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
         return this.movieDescList;
     }
 
-    Bill playMovie(String isbn, IClientBox box) throws RemoteException {
+    public Bill playMovie(String isbn, IClientBox box) throws RemoteException {
+        try {
+            box.stream(flow(isbn));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return new Bill(isbn, box);
     }
 
@@ -54,7 +59,7 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
         // name should be given to the method
 
         // will be filled in parameter
-        final Path path = Paths.get("src/fr/polytech/rmi/server/videos/" + isbn);
+        final Path path = Paths.get("src/fr/polytech/rmi/server/videos/" + isbn + ".mp4");
         final File file = new File(path.toUri());
 
         LOGGER.info("Looking for file " + file.getAbsolutePath());

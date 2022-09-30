@@ -5,9 +5,8 @@ import fr.polytech.rmi.client.IClientBox;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
-public class Bill extends UnicastRemoteObject implements Serializable {
+public class Bill implements Serializable {
     private String movieName;
     private BigInteger outrageousPrice;
 

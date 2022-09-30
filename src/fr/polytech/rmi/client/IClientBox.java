@@ -1,4 +1,9 @@
 package fr.polytech.rmi.client;
 
-public interface IClientBox {
+import java.rmi.Remote;
+
+public interface IClientBox extends Remote {
+
+    void stream(byte[] chunk);
+
 }
