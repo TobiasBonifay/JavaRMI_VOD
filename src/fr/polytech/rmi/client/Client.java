@@ -62,14 +62,14 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
         }
         try {
             // Client initialement connait donc la classe MovieDesc
-            List<MovieDesc> movieDescList = vodService.viewCatalog();
+            final List<MovieDesc> movieDescList = vodService.viewCatalog();
             for (MovieDesc m : movieDescList) {
                 System.out.println(m);
             }
 
             System.out.println("Write isbn : ");
-            String isbn = SCANNER.nextLine();
-            Bill bill = vodService.playMovie(isbn, this);
+            final String isbn = SCANNER.nextLine().toLowerCase().trim();
+            final Bill bill = vodService.playMovie(isbn, this);
             System.out.println(bill);
 
         } catch (IOException e) {
