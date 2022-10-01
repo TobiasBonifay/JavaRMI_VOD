@@ -1,13 +1,11 @@
 package fr.polytech.rmi.server;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
-public class MovieDesc implements Serializable {
-    protected String isbn;
-    protected String movieName;
-    protected String synopsis;
+public sealed class MovieDesc implements Serializable permits MovieDescExtended {
+    protected final String isbn;
+    protected final String movieName;
+    protected final String synopsis;
 
     public MovieDesc(String isbn, String movieName, String synopsis) {
         this.isbn = isbn;

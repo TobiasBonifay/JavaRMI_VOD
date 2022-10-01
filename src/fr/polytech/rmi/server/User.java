@@ -3,7 +3,7 @@ package fr.polytech.rmi.server;
 /**
  * Represents the user
  */
-public class User {
+public final class User {
 
     private final String email;
     private String password;

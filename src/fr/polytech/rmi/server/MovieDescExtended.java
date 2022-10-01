@@ -2,9 +2,9 @@ package fr.polytech.rmi.server;
 
 import java.rmi.RemoteException;
 
-public class MovieDescExtended extends MovieDesc {
-    protected String synopsis;
-    protected Byte[] teaser;
+public non-sealed class MovieDescExtended extends MovieDesc {
+    protected final String synopsis;
+    protected final Byte[] teaser;
 
 
     /**
@@ -19,5 +19,14 @@ public class MovieDescExtended extends MovieDesc {
         super(isbn, movieName, synopsis);
         this.synopsis = synopsis;
         this.teaser = teaser;
+    }
+
+    @Override
+    public String getSynopsis() {
+        return this.synopsis;
+    }
+
+    public Byte[] getTeaser() {
+        return this.teaser;
     }
 }

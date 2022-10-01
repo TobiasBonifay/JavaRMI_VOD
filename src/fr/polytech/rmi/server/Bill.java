@@ -3,7 +3,7 @@ package fr.polytech.rmi.server;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-public class Bill implements Serializable {
+public final class Bill implements Serializable {
     private final String movieName;
     private final BigInteger outrageousPrice;
 
