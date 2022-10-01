@@ -16,21 +16,23 @@ import java.util.logging.Logger;
 
 public class VODService extends UnicastRemoteObject implements IVODService, Serializable {
 
-    private final List<MovieDesc> movieDescList;
-
     private static final Logger LOGGER = Logger.getLogger(VODService.class.getName());
+    private static final String MOVIES_TXT = "movies.txt";
+
+    private final List<MovieDesc> movieDescList;
 
     protected VODService() throws RemoteException {
         super();
         movieDescList = new ArrayList<>();
         readMoviesData();
-        }
+    }
 
     @Override
     public List<MovieDesc> viewCatalog() throws RemoteException {
         return this.movieDescList;
     }
 
+    @Override
     public Bill playMovie(String isbn, IClientBox box) throws RemoteException {
         try {
             box.stream(flow(isbn));
@@ -46,7 +48,6 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
     }
 
 
-
     /**
      * I know IOException include FileNotFoundException... but let it for now
      *
@@ -55,8 +56,7 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
      * @throws FileNotFoundException
      * @throws IOException
      */
-    @Override
-    public byte[] flow(String isbn) throws RemoteException, IOException {
+    private byte[] flow(String isbn) throws RemoteException, IOException {
         // name should be given to the method
 
         // will be filled in parameter
@@ -83,27 +83,26 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
         return new byte[0];
     }
 
-    void readMoviesData(){
-        try
-        {
+    /**
+     * Fill the class attribut movieDescList with MovieDesc using a file.
+     */
+    private void readMoviesData() {
+        try {
             // Le fichier d'entrée
-            FileInputStream file = new FileInputStream("movies.txt");
-            Scanner scanner = new Scanner(file);
+            final FileInputStream file = new FileInputStream(MOVIES_TXT);
+            final Scanner scanner = new Scanner(file);
             String isbn;
             String movieName;
             String synopsys;
 
-            while(scanner.hasNextLine())
-            {
+            while (scanner.hasNextLine()) {
                 isbn = scanner.nextLine();
                 movieName = scanner.nextLine();
                 synopsys = scanner.nextLine();
-                movieDescList.add(new MovieDesc (isbn,movieName,synopsys));
+                movieDescList.add(new MovieDesc(isbn, movieName, synopsys));
             }
             scanner.close();
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
