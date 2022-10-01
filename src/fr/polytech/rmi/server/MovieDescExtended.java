@@ -1,10 +1,10 @@
 package fr.polytech.rmi.server;
 
-import java.rmi.RemoteException;
+import java.io.Serializable;
 
-public non-sealed class MovieDescExtended extends MovieDesc {
-    protected final String synopsis;
-    protected final Byte[] teaser;
+public final class MovieDescExtended extends MovieDesc implements Serializable {
+    private final String synopsis;
+    private final Byte[] teaser;
 
 
     /**
@@ -15,7 +15,7 @@ public non-sealed class MovieDescExtended extends MovieDesc {
      * @param synopsis
      * @param teaser
      */
-    public MovieDescExtended(String isbn, String movieName, String synopsis, Byte[] teaser) throws RemoteException {
+    public MovieDescExtended(String isbn, String movieName, String synopsis, Byte[] teaser) {
         super(isbn, movieName, synopsis);
         this.synopsis = synopsis;
         this.teaser = teaser;
