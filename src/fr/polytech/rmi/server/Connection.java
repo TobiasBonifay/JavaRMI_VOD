@@ -17,10 +17,18 @@ public class Connection extends UnicastRemoteObject implements IConnectionServic
     private static final java.util.logging.Logger LOGGER = Logger.getLogger(Connection.class.getName());
     private static final Scanner SCANNER = new Scanner(System.in);
     private static VODService vodService;
+
+    static {
+        try {
+            vodService = new VODService();
+        } catch (RemoteException e) {
+            LOGGER.severe("Can't create the VOD service.");
+        }
+    }
+
     private final transient Set<User> clients;
 
     public Connection(final Set<User> clients) throws RemoteException {
-        vodService = new VODService();
         this.clients = clients;
     }
 
