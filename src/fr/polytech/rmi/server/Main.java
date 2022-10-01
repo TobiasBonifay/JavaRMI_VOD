@@ -3,7 +3,10 @@ package fr.polytech.rmi.server;
 import fr.polytech.rmi.CONSTANTS;
 import fr.polytech.rmi.server.interfaces.IConnectionService;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.rmi.AlreadyBoundException;
@@ -31,27 +34,19 @@ public class Main {
     public static void main(String[] args) {
 
         LOGGER.info("Server is starting...");
-
         LOGGER.info("Looking for old database file... " + CONSTANTS.FILE_DB);
-        final Set<User> userToRecreate = new HashSet<>();
-        try {
-            final File file = new File(path.toUri());
-            if (file.exists() && !file.isDirectory() && file.canRead()) {
-                LOGGER.info("File exists");
-                final Scanner scanner = new Scanner(file);
-                LOGGER.info("Users found:");
-                // each string represents a user (email password)
-                while (scanner.hasNextLine()) {
-                    final String[] data = scanner.nextLine().split(" ");
-                    final User userFound = new User(data[0], data[1]);
-                    userToRecreate.add(userFound);
-                    LOGGER.info("User: " + userFound.getEmail() + "  " + userFound.getPassword());
-                }
-            }
-        } catch (FileNotFoundException e) {
-            LOGGER.info("No old save DB detected");
-        }
+        final File file = new File(path.toUri());
+        final Set<User> userToRecreate = importUserFromFile(file);
 
+        initiateConnection(userToRecreate);
+    }
+
+    /**
+     * Create a connection, bind to a specific port, and handle the shutdown hook
+     *
+     * @param userToRecreate Set of user to import
+     */
+    private static void initiateConnection(Set<User> userToRecreate) {
         Registry reg = null;
         try {
             final IConnectionService connectionService = new Connection(userToRecreate);
@@ -70,6 +65,39 @@ public class Main {
         }
     }
 
+    /**
+     * Fetch user from file
+     *
+     * @param file to import
+     * @return Set of User
+     */
+    private static Set<User> importUserFromFile(File file) {
+        if (file == null || !file.exists() || file.isDirectory() || !file.canRead())
+            return new HashSet<>();
+
+        final Set<User> userToRecreate = new HashSet<>();
+        try {
+            final Scanner scanner = new Scanner(file);
+            LOGGER.info("File exists\nUsers found:");
+            // each string represents a user (email password)
+            while (scanner.hasNextLine()) {
+                final String[] data = scanner.nextLine().split(" ");
+                final User userFound = new User(data[0], data[1]);
+                userToRecreate.add(userFound);
+                LOGGER.info("User: " + userFound.getEmail() + "  " + userFound.getPassword());
+            }
+            scanner.close();
+        } catch (IOException e) {
+            LOGGER.info("Can't import " + file.getAbsolutePath());
+        }
+        return userToRecreate;
+    }
+
+    /**
+     * Method executed on shutdown, write/export users in a file
+     *
+     * @param finalReg Registry
+     */
     private static void save(final Registry finalReg) {
         try {
             LOGGER.info("Saving before shutdown...");
