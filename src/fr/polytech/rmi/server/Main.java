@@ -1,6 +1,5 @@
 package fr.polytech.rmi.server;
 
-import fr.polytech.rmi.CONSTANTS;
 import fr.polytech.rmi.server.interfaces.IConnectionService;
 
 import java.io.BufferedWriter;
