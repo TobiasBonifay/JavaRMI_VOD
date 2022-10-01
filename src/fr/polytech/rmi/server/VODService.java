@@ -37,9 +37,9 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
         try {
             box.stream(flow(isbn));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOGGER.severe("Can't play the movie! Try again.");
         }
-        return new Bill("Harry Potter", new BigInteger("123456789123"));
+        return new Bill("Harry Potter", BigInteger.valueOf(123456789123L));
     }
 
     @Override
@@ -69,15 +69,12 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
         byte[] bytes = new byte[bufferSize];
 
         LOGGER.info("Generating stream...");
-        InputStream is = null;
-        try {
-            is = new FileInputStream(file);
+        try (InputStream is = new FileInputStream(file)) {
             is.read(bytes, 0, bufferSize);
             return bytes;         // return the name with Pair if you can't find any other way of doing it
         } catch (FileNotFoundException e) {
             LOGGER.severe("File " + file.getAbsolutePath() + " not found\n" + e);
         } finally {
-            is.close();
             LOGGER.info("Done reading " + file.getAbsolutePath());
         }
         return new byte[0];

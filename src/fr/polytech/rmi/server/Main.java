@@ -52,7 +52,7 @@ public class Main {
             final IConnectionService connectionService = new Connection(userToRecreate);
             LOGGER.info(" ConnectionServer is running... ");
             reg = LocateRegistry.createRegistry(CONSTANTS.DEFAULT_PORT);
-            reg.bind(CONSTANTS.CONNEXIONSERV, connectionService);
+            reg.bind(CONSTANTS.CONNEXION_SERV, connectionService);
             LOGGER.info("Server ready");
         } catch (RemoteException e) {
             LOGGER.severe("Server exception: " + e);
@@ -72,8 +72,7 @@ public class Main {
      * @return Set of User
      */
     private static Set<User> importUserFromFile(File file) {
-        if (file == null || !file.exists() || file.isDirectory() || !file.canRead())
-            return new HashSet<>();
+        if (file == null || !file.exists() || file.isDirectory() || !file.canRead()) return new HashSet<>();
 
         final Set<User> userToRecreate = new HashSet<>();
         try {
@@ -99,13 +98,11 @@ public class Main {
      * @param finalReg Registry
      */
     private static void save(final Registry finalReg) {
-        try {
-            LOGGER.info("Saving before shutdown...");
-            final BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()));
-            final IConnectionService ic = (IConnectionService) finalReg.lookup(CONSTANTS.CONNEXIONSERV);
+        LOGGER.info("Saving before shutdown...");
+        try (final BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
+            final IConnectionService ic = (IConnectionService) finalReg.lookup(CONSTANTS.CONNEXION_SERV);
             for (User client : ic.getClients())
                 writer.write(client.getEmail() + " " + client.getPassword() + System.lineSeparator());
-            writer.close();
         } catch (IOException | NotBoundException e) {
             e.printStackTrace();
         } finally {
