@@ -2,9 +2,9 @@ package fr.polytech.rmi.server;
 
 import java.io.Serializable;
 
-public final class MovieDescExtended extends MovieDesc implements Serializable {
+final class MovieDescExtended extends MovieDesc implements Serializable {
     private final String synopsis;
-    private final Byte[] teaser;
+    private final byte[] teaser;
 
 
     /**
@@ -15,7 +15,7 @@ public final class MovieDescExtended extends MovieDesc implements Serializable {
      * @param synopsis
      * @param teaser
      */
-    public MovieDescExtended(String isbn, String movieName, String synopsis, Byte[] teaser) {
+    public MovieDescExtended(String isbn, String movieName, String synopsis, byte[] teaser) {
         super(isbn, movieName, synopsis);
         this.synopsis = synopsis;
         this.teaser = teaser;
@@ -26,7 +26,7 @@ public final class MovieDescExtended extends MovieDesc implements Serializable {
         return this.synopsis;
     }
 
-    public Byte[] getTeaser() {
+    public byte[] getTeaser() {
         return this.teaser;
     }
 }
