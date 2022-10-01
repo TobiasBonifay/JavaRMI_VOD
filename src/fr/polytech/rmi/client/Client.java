@@ -39,6 +39,12 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
         LOGGER.info("Finished");
     }
 
+    private static void displayMovies(List<MovieDesc> movieDescList) {
+        for (MovieDesc m : movieDescList) {
+            System.out.println(m);
+        }
+    }
+
     private void enterCredentials() {
         System.out.print("Email : ");
         this.email = SCANNER.nextLine();
@@ -58,14 +64,13 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
         try {
             vodService = stubConnexion.login(email, password);
         } catch (InvalidCredentialsException e) {
-            throw new RuntimeException("Invalid credentials\n" + e);
+            LOGGER.severe("Invalid credentials");
+            return;
         }
         try {
             // Client initialement connait donc la classe MovieDesc
             final List<MovieDesc> movieDescList = vodService.viewCatalog();
-            for (MovieDesc m : movieDescList) {
-                System.out.println(m);
-            }
+            displayMovies(movieDescList);
 
             System.out.println("Write isbn : ");
             final String isbn = SCANNER.nextLine().toLowerCase().trim();
@@ -75,8 +80,6 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
         } catch (IOException e) {
             LOGGER.severe("vodService can't read the requested content.\n" + e);
         }
-
-
     }
 
     private void signIn(IConnectionService stubConnexion) throws RemoteException {
@@ -94,7 +97,6 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
                 stubConnexion.signIn(email, password);
             } catch (SignInFailedException e) {
                 LOGGER.severe("Failed to sign in");
-                throw new RuntimeException(e);
             }
         }
     }
@@ -102,7 +104,7 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
     //Used by server side
     @Override
     public void stream(byte[] chunk) throws RemoteException {
-        System.out.println("Lecture de la vidéo : ");
+        System.out.println("Playing the video:  ");
         System.out.println(Arrays.toString(chunk));
     }
 }
