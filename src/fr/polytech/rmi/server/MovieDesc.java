@@ -2,6 +2,12 @@ package fr.polytech.rmi.server;
 
 import java.io.Serializable;
 
+/**
+ * MovieDesc
+ *
+ * @author Tobias Bonifay
+ * @author Ihor Melnyk
+ */
 public sealed class MovieDesc implements Serializable permits MovieDescExtended {
     protected final String isbn;
     protected final String movieName;

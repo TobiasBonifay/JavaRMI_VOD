@@ -14,6 +14,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+/**
+ * VODService
+ *
+ * @author Tobias Bonifay
+ * @author Ihor Melnyk
+ */
 public class VODService extends UnicastRemoteObject implements IVODService, Serializable {
 
     private static final Logger LOGGER = Logger.getLogger(VODService.class.getName());

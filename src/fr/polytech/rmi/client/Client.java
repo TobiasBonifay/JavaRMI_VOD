@@ -20,7 +20,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
-
+/**
+ * Client launcher
+ *
+ * @author Tobias Bonifay
+ * @author Ihor Melnyk
+ */
 public class Client extends UnicastRemoteObject implements Serializable, IClientBox {
 
     private static final Scanner SCANNER = new Scanner(System.in);

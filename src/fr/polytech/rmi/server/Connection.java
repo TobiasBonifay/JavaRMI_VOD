@@ -12,6 +12,12 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
+/**
+ * UnicastRemoteObject that handles user's connexion and then provides VODService
+ *
+ * @author Tobias Bonifay
+ * @author Ihor Melnyk
+ */
 public class Connection extends UnicastRemoteObject implements IConnectionService {
 
     private static final java.util.logging.Logger LOGGER = Logger.getLogger(Connection.class.getName());
