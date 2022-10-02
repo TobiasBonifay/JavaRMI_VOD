@@ -52,7 +52,7 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
         this.password = SCANNER.nextLine();
     }
 
-    private void runClient() throws RemoteException, NotBoundException {
+    void runClient() throws RemoteException, NotBoundException {
 
         final Registry reg = LocateRegistry.getRegistry(IP_ADDRESS, PORT);
         final IConnectionService stubConnexion = (IConnectionService) reg.lookup("ConnexionServ");

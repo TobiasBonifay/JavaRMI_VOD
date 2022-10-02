@@ -7,7 +7,7 @@ public record Bill(String movieName, BigInteger outrageousPrice) implements Seri
     @Override
     public String toString() {
         return "Bill : " +
-                "movie : " + movieName +
+                "Movie : " + movieName +
                 ", Price : " + outrageousPrice + "$";
     }
 }
