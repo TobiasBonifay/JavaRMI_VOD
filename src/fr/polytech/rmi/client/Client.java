@@ -36,7 +36,7 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
     }
 
     public static void main(String[] args) throws NotBoundException, RemoteException {
-        Client c1 = new Client();
+        final Client c1 = new Client();
         c1.runClient();
         LOGGER.info("Finished");
     }
