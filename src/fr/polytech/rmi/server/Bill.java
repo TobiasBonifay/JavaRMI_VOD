@@ -6,8 +6,8 @@ import java.math.BigInteger;
 public record Bill(String movieName, BigInteger outrageousPrice) implements Serializable {
     @Override
     public String toString() {
-        return "Bill : " +
-                "Movie : " + movieName +
-                ", Price : " + outrageousPrice + "$";
+        return "Bill : \n" +
+                "Movie: " + movieName +
+                ", Price: " + outrageousPrice + "$";
     }
 }

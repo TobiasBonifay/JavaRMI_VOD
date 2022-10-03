@@ -40,25 +40,24 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
 
     @Override
     public Bill playMovie(String isbn, IClientBox box) throws RemoteException {
-        final Thread t1 = new Thread(new Runnable (){
-            public void run() {
-                try {
-                    byte[] data = flow(isbn);
-                    int i = 0;
-                    while (i < data.length){
-                        box.stream(new byte[]{data[i]});
-                        i++;
-                        if ( (i % 5) == 0){
-                            Thread.sleep(16);
-                        }
-                    }
-                    } catch (IOException | InterruptedException e) {
-                        LOGGER.severe("Can't play the movie! Try again.");
-                    }
+        try {
+            byte[] data = flow(isbn);
+            int i = 0;
+            while (i < data.length){
+                box.stream(new byte[]{data[i]});
+                i++;
+                if ( (i % 6) == 0){
+                    Thread.sleep(16);
                 }
-            });
-        t1.start();
-        return new Bill("Harry Potter", BigInteger.valueOf(123456789123L));
+            }
+        } catch (IOException | InterruptedException e) {
+            LOGGER.severe("Can't play the movie! Try again.");
+        }
+        String filmName = null;
+        for (MovieDesc md : movieDescList){
+            if (md.getIsbn().equals(isbn)) filmName = md.getMovieName();
+        }
+        return new Bill(filmName, BigInteger.valueOf(123456789123L));
     }
 
     @Override
