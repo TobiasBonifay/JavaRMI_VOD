@@ -84,7 +84,7 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
 
         LOGGER.info("Generating stream...");
         try (InputStream is = new FileInputStream(file)) {
-            is.read(bytes, 0, bufferSize);
+            if (is.read(bytes, 0, bufferSize) == -1) LOGGER.info("end of file, reached");
             return bytes;         // return the name with Pair if you can't find any other way of doing it
         } catch (FileNotFoundException e) {
             LOGGER.severe("File " + file.getAbsolutePath() + " not found\n" + e);
