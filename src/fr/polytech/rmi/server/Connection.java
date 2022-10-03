@@ -60,9 +60,18 @@ public class Connection extends UnicastRemoteObject implements IConnectionServic
     public IVODService login(String mail, String password) throws InvalidCredentialsException, RemoteException {
         if (mail == null || mail.isBlank()) throw new InvalidCredentialsException("Mail is empty");
         if (password == null || password.isBlank()) throw new InvalidCredentialsException("Password is empty");
-        final Predicate<User> sameMailAndPassword = u -> u.getEmail().equals(mail) && u.getPassword().equals(password);
-        if (clients.stream().anyMatch(sameMailAndPassword)) return vodService;
+        if (clients.stream().anyMatch(credentialsMatch(mail, password))) return vodService;
 
         throw new InvalidCredentialsException("User does not exists.");
+    }
+
+    @Override
+    public final Predicate<User> credentialsMatch(String mail, String password) {
+        return u -> u.getEmail().equals(mail) && u.getPassword().equals(password);
+    }
+
+    @Override
+    public boolean isThePasswordCorrect(String email, String password) {
+        return clients.stream().anyMatch(credentialsMatch(email, password));
     }
 }

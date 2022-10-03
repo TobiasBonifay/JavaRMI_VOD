@@ -89,7 +89,9 @@ public class Client extends UnicastRemoteObject implements Serializable, IClient
             try {
                 stubConnexion.signIn(email, password);
             } catch (SignInFailedException e) {
-                LOGGER.severe("Failed to sign in with " + email);
+                LOGGER.severe("The account already exists");
+                if (stubConnexion.isThePasswordCorrect(email, password)) LOGGER.info("You just logged in");
+                else throw new RemoteException("Cheater, that's not your account.");
             }
         }
     }
