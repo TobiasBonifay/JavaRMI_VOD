@@ -10,10 +10,6 @@ import java.util.List;
 
 public interface IVODService extends Remote {
 
-    default void echo() throws RemoteException {
-        System.out.println("I'm VOD service, it works!");
-    }
-
     List<MovieDesc> viewCatalog() throws RemoteException;
 
     Bill playMovie(String isbn, IClientBox box) throws RemoteException;

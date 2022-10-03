@@ -11,13 +11,9 @@ import java.rmi.RemoteException;
  */
 public class MainClient2 {
 
-    public static void main(String[] args) {
-        Client c2 = null;
-        try {
-            c2 = new Client();
-            c2.runClient();
-        } catch (RemoteException | NotBoundException e) {
-            throw new RuntimeException(e);
-        }
+    public static void main(String[] args) throws RemoteException, NotBoundException {
+        final Client c2 = new Client();
+        c2.runClient();
+        System.out.println("Done.");
     }
 }

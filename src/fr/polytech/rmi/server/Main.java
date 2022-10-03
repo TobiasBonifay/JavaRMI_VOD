@@ -14,6 +14,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -70,7 +71,7 @@ public class Main {
             LOGGER.severe("Connection already bound: " + e);
         } finally {
             final Registry finalReg = reg;
-            final Thread saveDB = new Thread(() -> save(finalReg));
+            final Thread saveDB = new Thread(() -> save(Objects.requireNonNull(finalReg)));
             Runtime.getRuntime().addShutdownHook(saveDB);
         }
     }
