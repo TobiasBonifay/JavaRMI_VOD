@@ -61,11 +61,6 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
         return new Bill("Harry Potter", BigInteger.valueOf(123456789123L));
     }
 
-    @Override
-    public void echo() throws RemoteException {
-        IVODService.super.echo();
-    }
-
 
     /**
      * I know IOException include FileNotFoundException... but let it for now
