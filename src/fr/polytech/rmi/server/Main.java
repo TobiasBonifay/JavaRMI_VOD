@@ -26,14 +26,25 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-    private static final Path path = Paths.get(CONSTANTS.FILE_DB);
+    /**
+     * CONFIGURATION
+     */
+    private static final String CONNEXION_SERV = "ConnexionServ";
+    private static final String FILE_DB = "save.db";
+    private static final int DEFAULT_PORT = 1099;
+    private static final Path path = Paths.get(FILE_DB);
 
     private static final java.util.logging.Logger LOGGER = Logger.getLogger(Main.class.getName());
 
+    /**
+     * Run the server & import user from FILE_DB
+     *
+     * @param args no parameters are required
+     */
     public static void main(String[] args) {
 
         LOGGER.info("Server is starting...");
-        LOGGER.info("Looking for old database file... " + CONSTANTS.FILE_DB);
+        LOGGER.info("Looking for old database file... " + FILE_DB);
         final File file = new File(path.toUri());
         final Set<User> userToRecreate = importUserFromFile(file);
 
@@ -50,8 +61,8 @@ public class Main {
         try {
             final IConnectionService connectionService = new Connection(userToRecreate);
             LOGGER.info(" ConnectionServer is running... ");
-            reg = LocateRegistry.createRegistry(CONSTANTS.DEFAULT_PORT);
-            reg.bind(CONSTANTS.CONNEXION_SERV, connectionService);
+            reg = LocateRegistry.createRegistry(DEFAULT_PORT);
+            reg.bind(CONNEXION_SERV, connectionService);
             LOGGER.info("Server ready");
         } catch (RemoteException e) {
             LOGGER.severe("Server exception: " + e);
@@ -70,7 +81,7 @@ public class Main {
      * @param file to import
      * @return Set of User
      */
-    private static Set<User> importUserFromFile(File file) {
+    private static Set<User> importUserFromFile(final File file) {
         if (file == null || !file.exists() || file.isDirectory() || !file.canRead()) return new HashSet<>();
 
         final Set<User> userToRecreate = new HashSet<>();
@@ -99,7 +110,7 @@ public class Main {
     private static void save(final Registry finalReg) {
         LOGGER.info("Saving before shutdown...");
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
-            final IConnectionService ic = (IConnectionService) finalReg.lookup(CONSTANTS.CONNEXION_SERV);
+            final IConnectionService ic = (IConnectionService) finalReg.lookup(CONNEXION_SERV);
             for (User client : ic.getClients())
                 writer.write(client.getEmail() + " " + client.getPassword() + System.lineSeparator());
         } catch (IOException | NotBoundException e) {
