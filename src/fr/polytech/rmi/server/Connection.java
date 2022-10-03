@@ -7,7 +7,6 @@ import fr.polytech.rmi.server.interfaces.IVODService;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -21,7 +20,9 @@ import java.util.logging.Logger;
 public class Connection extends UnicastRemoteObject implements IConnectionService {
 
     private static final java.util.logging.Logger LOGGER = Logger.getLogger(Connection.class.getName());
-    private static final Scanner SCANNER = new Scanner(System.in);
+
+    private final transient Set<User> clients;
+
     private static VODService vodService;
 
     static {
@@ -32,7 +33,6 @@ public class Connection extends UnicastRemoteObject implements IConnectionServic
         }
     }
 
-    private final transient Set<User> clients;
 
     public Connection(final Set<User> clients) throws RemoteException {
         this.clients = clients;
@@ -43,16 +43,6 @@ public class Connection extends UnicastRemoteObject implements IConnectionServic
         return this.clients;
     }
 
-    @Override
-    public void run() throws RemoteException {
-        final String email = SCANNER.nextLine();
-        final String pass = SCANNER.nextLine();
-        try {
-            if (signIn(email, pass)) LOGGER.info("User was successfully added to client list !");
-        } catch (SignInFailedException e) {
-            LOGGER.severe("User was not added to client list... already logged in? " + e);
-        }
-    }
 
     @Override
     public boolean signIn(String mail, String password) throws SignInFailedException, RemoteException {
@@ -71,8 +61,7 @@ public class Connection extends UnicastRemoteObject implements IConnectionServic
         if (mail == null || mail.isBlank()) throw new InvalidCredentialsException("Mail is empty");
         if (password == null || password.isBlank()) throw new InvalidCredentialsException("Password is empty");
         final Predicate<User> sameMailAndPassword = u -> u.getEmail().equals(mail) && u.getPassword().equals(password);
-        if (clients.stream().anyMatch(sameMailAndPassword))
-            return vodService;
+        if (clients.stream().anyMatch(sameMailAndPassword)) return vodService;
 
         throw new InvalidCredentialsException("User does not exists.");
     }
