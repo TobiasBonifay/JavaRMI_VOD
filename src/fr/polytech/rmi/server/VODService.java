@@ -40,35 +40,35 @@ public class VODService extends UnicastRemoteObject implements IVODService, Seri
 
     @Override
     public Bill playMovie(String isbn, IClientBox box) throws RemoteException {
-        final Thread t1 = new Thread(() -> {
+        new Thread(() -> {
             try {
                 byte[] data = flow(isbn);
                 int i = 0;
                 while (i < data.length) {
-                    box.stream(new byte[]{data[i]});
-                    i++;
-                    if ((i % 5) == 0) {
-                        Thread.sleep(16);
-                    }
+                    box.stream(new byte[]{data[i++]});
+                    if ((i % 5) == 0) Thread.sleep(16);
                 }
-            } catch (IOException | InterruptedException e) {
+            } catch (RemoteException e) {
+                LOGGER.severe("Remote exception, Try again.");
+            } catch (IOException e) {
                 LOGGER.severe("Can't play the movie! Try again.");
+            } catch (InterruptedException e) {
+                LOGGER.severe("Interrupted.");
             }
-        });
-        t1.start();
+        }).start();
         return new Bill("Harry Potter", BigInteger.valueOf(123456789123L));
     }
 
 
     /**
-     * I know IOException include FileNotFoundException... but let it for now
+     * Remote exception is a subclass of IOException
      *
      * @return byte array of a file
      * @throws RemoteException
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private byte[] flow(String isbn) throws RemoteException, IOException {
+    private byte[] flow(String isbn) throws IOException {
         // name should be given to the method
 
         // will be filled in parameter
